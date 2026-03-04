@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -10,7 +9,7 @@
 <nav class="navbar navbar-dark bg-dark">
     <div class="container">
         <a class="navbar-brand" href="#">Aplikasi Rapot</a>
-        <a href="{{ route('siswa.index') }}" class="btn btn-light btn-sm">Data Siswa</a>
+        <a href="{{ route('guru.index') }}" class="btn btn-light btn-sm">Data Guru</a>
     </div>
 </nav>
 
