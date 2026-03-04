@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\RapotController;
 use App\Http\Controllers\NilaiController;
 
 use App\Http\Controllers\KelasController;
@@ -18,6 +19,7 @@ Route::get('/', function () {
 });
 
 
+Route::resource('rapot', RapotController::class);
 Route::resource('nilai', NilaiController::class);
 /*
 |--------------------------------------------------------------------------
