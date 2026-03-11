@@ -1,149 +1,222 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <title>Data Kelas</title>
+@extends('layouts.app')
 
-    <!-- Bootstrap & Icons -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+@section('title', 'Data Kelas')
+@section('breadcrumb', 'KELAS / INDEX')
 
-    <style>
-        body {
-            background: #4b6894;
-        }
-        .card {
-            border: none;
-        }
-        .card-header {
-            box-shadow: inset 0 -1px 0 rgba(255,255,255,.2);
-        }
-        .table th, .table td {
-            vertical-align: middle;
-        }
-        .search-box {
-            max-width: 260px;
-        }
-    </style>
-</head>
-
-<body>
-
-<div class="container my-5">
-
-    <div class="card shadow-lg rounded-4">
-
-        <!-- HEADER -->
-        <div class="card-header text-white rounded-top-4"
-             style="background: linear-gradient(135deg, #4e73df, #151b2c);">
-            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
-                <div>
-                    <h4 class="mb-0">
-                        <i class="bi bi-journal-bookmark-fill me-2"></i>
-                        Data Kelas
-                    </h4>
-                    <small class="opacity-75">
-                        Total kelas: <strong>{{ $kelas->count() }}</strong>
-                    </small>
-                </div>
-
-                <a href="{{ route('kelas.create') }}" class="btn btn-light btn-sm fw-semibold">
-                    <i class="bi bi-plus-circle"></i> Tambah Kelas
-                </a>
-            </div>
+@section('content')
+<!-- Stats Cards -->
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-icon">
+            <i class="bi bi-diagram-3-fill"></i>
         </div>
+        <div class="stat-content">
+            <h3>{{ $kelas->total() }}</h3>
+            <p>Total Kelas</p>
+        </div>
+    </div>
+    <button class="btn-outline-custom" onclick="window.print()">
+    <i class="bi bi-printer"></i>
+    Cetak
+    </button>
 
-        <!-- BODY -->
-        <div class="card-body">
+    <a href="{{ route('kelas.export.pdf') }}" class="btn-outline-custom">
+    <i class="bi bi-file-earmark-pdf"></i>
+    Export PDF
+    </a>
 
-            <!-- SEARCH -->
-            <div class="d-flex justify-content-end mb-3">
-                <input type="text"
-                       id="searchInput"
-                       class="form-control form-control-sm search-box"
-                       placeholder="🔍 Cari kelas...">
-            </div>
-
-            <div class="table-responsive">
-                <table class="table table-hover align-middle text-center" id="kelasTable">
-                    <thead class="table-light">
-                        <tr>
-                            <th width="5%">No</th>
-                            <th>Nama Kelas</th>
-                            <th>Wali Kelas</th>
-                            <th>Deskripsi</th>
-                            <th width="15%">Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-
-                        @forelse ($kelas as $item)
-                            <tr>
-                                <td>
-                                    <span class="badge bg-primary">
-                                        {{ $loop->iteration }}
-                                    </span>
-                                </td>
-                                <td class="fw-semibold">{{ $item->nama_kelas }}</td>
-                                <td>{{ $item->wali_kelas }}</td>
-                                <td class="text-muted">
-                                    {{ $item->deskripsi ?? '-' }}
-                                </td>
-                                <td>
-                                    <a href="{{ route('kelas.edit', $item->id) }}"
-                                       class="btn btn-outline-warning btn-sm me-1"
-                                       title="Edit">
-                                        <i class="bi bi-pencil-square"></i>
-                                    </a>
-
-                                    <form action="{{ route('kelas.destroy', $item->id) }}"
-                                          method="POST" class="d-inline">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button class="btn btn-outline-danger btn-sm"
-                                                title="Hapus"
-                                                onclick="return confirm('Yakin hapus data kelas ini?')">
-                                            <i class="bi bi-trash"></i>
-                                        </button>
-                                    </form>
-                                </td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="5" class="py-5 text-muted">
-                                    <i class="bi bi-inbox fs-1 d-block mb-2"></i>
-                                    <div class="fw-semibold">Belum ada data kelas</div>
-                                    <small>Silakan tambah data kelas terlebih dahulu</small>
-                                </td>
-                            </tr>
-                        @endforelse
-
-                    </tbody>
-                </table>
-            </div>
-
+    <a href="{{ route('kelas.export.excel') }}" class="btn-outline-custom">
+    <i class="bi bi-file-earmark-excel"></i>
+    Export Excel
+    </a>
+    <div class="stat-card">
+        <div class="stat-icon">
+            <i class="bi bi-people-fill"></i>
+        </div>
+        <div class="stat-content">
+            <h3>{{ $kelas->sum('jumlah_siswa') ?? 0 }}</h3>
+            <p>Total Siswa</p>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon">
+            <i class="bi bi-person-badge-fill"></i>
+        </div>
+        <div class="stat-content">
+            <h3>{{ $kelas->whereNotNull('wali_kelas')->count() }}</h3>
+            <p>Dengan Wali Kelas</p>
         </div>
     </div>
 </div>
 
-<!-- Bootstrap -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Action Buttons -->
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div class="d-flex gap-2">
+        <a href="{{ route('kelas.create') }}" class="btn-primary-custom">
+            <i class="bi bi-plus-circle"></i>
+            Tambah Kelas
+        </a>
+        <button class="btn-outline-custom" onclick="window.print()">
+            <i class="bi bi-printer"></i>
+            Cetak
+        </button>
+        <button class="btn-outline-custom" data-bs-toggle="modal" data-bs-target="#filterModal">
+            <i class="bi bi-funnel"></i>
+            Filter
+        </button>
+    </div>
+    <div>
+        <select class="form-select border-soft rounded-3" style="width: auto; padding: 0.6rem 2rem 0.6rem 1rem; font-weight: 600; color: var(--text-secondary);">
+            <option>Semua Jurusan</option>
+            <option>IPA</option>
+            <option>IPS</option>
+            <option>Bahasa</option>
+            <option>RPL</option>
+            <option>AKL</option>
+        </select>
+    </div>
+</div>
 
-<!-- SIMPLE SEARCH -->
-<script>
-    const searchInput = document.getElementById('searchInput');
-    const tableRows = document.querySelectorAll('#kelasTable tbody tr');
+<!-- Table -->
+<div class="card-premium p-0 overflow-hidden">
+    <div class="table-responsive">
+        <table class="table-premium">
+            <thead>
+                <tr>
+                    <th>No</th>
+                    <th>Nama Kelas</th>
+                    <th>Jurusan</th>
+                    <th>Wali Kelas</th>
+                    <th>Jumlah Siswa</th>
+                    <th>Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse($kelas as $k)
+                <tr>
+                    <td>
+                        <span class="fw-700" style="color: var(--primary-600);">{{ $loop->iteration }}</span>
+                    </td>
+                    <td>
+                        <div class="d-flex align-items-center gap-2">
+                            <div style="width: 36px; height: 36px; background: linear-gradient(135deg, var(--primary-500), var(--primary-400)); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700;">
+                                {{ substr($k->nama_kelas, 0, 1) }}
+                            </div>
+                            <div>
+                                <span class="fw-700">{{ $k->nama_kelas }}</span>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <span class="badge-premium badge-blue">
+                            <i class="bi bi-bookmark"></i>
+                            {{ $k->jurusan ?? '-' }}
+                        </span>
+                    </td>
+                    <td>
+                        @if($k->wali_kelas)
+                            <div class="d-flex align-items-center gap-2">
+                                <i class="bi bi-person-check" style="color: var(--primary-500);"></i>
+                                <span class="text-muted fw-600">{{ $k->wali_kelas }}</span>
+                            </div>
+                        @else
+                            <span class="text-muted">-</span>
+                        @endif
+                    </td>
+                    <td>
+                        <span class="fw-600">{{ $k->jumlah_siswa ?? 0 }} Siswa</span>
+                    </td>
+                    <td>
+                        <div class="action-buttons">
+                            <a href="{{ route('kelas.show', $k->id) }}" class="btn-action" title="Detail">
+                                <i class="bi bi-eye"></i>
+                            </a>
+                            <a href="{{ route('kelas.edit', $k->id) }}" class="btn-action btn-action-edit" title="Edit">
+                                <i class="bi bi-pencil"></i>
+                            </a>
+                            <form action="{{ route('kelas.destroy', $k->id) }}" method="POST" style="display: inline;" 
+                                  onsubmit="return confirm('Yakin ingin menghapus kelas {{ $k->nama_kelas }}?')">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn-action btn-action-delete" title="Hapus">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                @empty
+                <tr>
+                    <td colspan="6" style="text-align: center; padding: 3rem;">
+                        <i class="bi bi-diagram-3 fs-1" style="color: var(--text-muted); opacity: 0.5;"></i>
+                        <h5 class="mt-3 fw-700">Belum Ada Data Kelas</h5>
+                        <p class="text-muted">Klik tombol "Tambah Kelas" untuk menambahkan data</p>
+                        <a href="{{ route('kelas.create') }}" class="btn-primary-custom mt-3">
+                            <i class="bi bi-plus-circle"></i>
+                            Tambah Kelas
+                        </a>
+                    </td>
+                </tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
+</div>
 
-    searchInput.addEventListener('keyup', function () {
-        const keyword = this.value.toLowerCase();
+<!-- Pagination -->
+<div class="d-flex justify-content-between align-items-center mt-4">
+    <div class="text-muted small fw-600">
+        Menampilkan {{ $kelas->firstItem() ?? 0 }} - {{ $kelas->lastItem() ?? 0 }} dari {{ $kelas->total() ?? 0 }} data
+    </div>
+    <div>
+        {{ $kelas->links() }}
+    </div>
+</div>
 
-        tableRows.forEach(row => {
-            row.style.display = row.innerText.toLowerCase().includes(keyword)
-                ? ''
-                : 'none';
-        });
-    });
-</script>
-
-</body>
-</html>
+<!-- Modal Filter -->
+<div class="modal fade" id="filterModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-premium" style="border-radius: 24px;">
+            <div class="modal-header border-soft" style="padding: 1.5rem;">
+                <h5 class="modal-title fw-800">
+                    <i class="bi bi-funnel me-2" style="color: var(--primary-500);"></i>
+                    Filter Data Kelas
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" style="padding: 1.5rem;">
+                <form>
+                    <div class="mb-3">
+                        <label class="form-label fw-600 small text-muted">Jurusan</label>
+                        <select class="form-control border-soft rounded-3 p-3">
+                            <option>Semua Jurusan</option>
+                            <option>IPA</option>
+                            <option>IPS</option>
+                            <option>Bahasa</option>
+                            <option>RPL</option>
+                            <option>AKL</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-600 small text-muted">Tingkat</label>
+                        <select class="form-control border-soft rounded-3 p-3">
+                            <option>Semua Tingkat</option>
+                            <option>X</option>
+                            <option>XI</option>
+                            <option>XII</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-600 small text-muted">Kata Kunci</label>
+                        <input type="text" class="form-control border-soft rounded-3 p-3" placeholder="Cari nama kelas atau wali kelas...">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer border-soft" style="padding: 1.5rem;">
+                <button type="button" class="btn-outline-custom" data-bs-dismiss="modal">Reset</button>
+                <button type="button" class="btn-primary-custom" data-bs-dismiss="modal">Terapkan Filter</button>
+            </div>
+        </div>
+    </div>
+</div>
+@endsection

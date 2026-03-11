@@ -15,8 +15,10 @@ public function up(): void
         $table->id();
         $table->string('nis');
         $table->string('nama');
-        $table->string('jenis_kelamin');
+        $table->enum('jenis_kelamin',['L','P']);
         $table->string('alamat');
+        $table->string('kelas')->nullable();
+        $table->string('status')->default('aktif');
         $table->timestamps();
     });
 }

@@ -11,20 +11,25 @@ return new class extends Migration
      */
     public function up(): void
     {
-      Schema::create('rapots', function (Blueprint $table) {
-    $table->id();
-    $table->string('nama_siswa');
-    $table->string('nis');
-    $table->string('kelas');
-    $table->string('semester');
+        Schema::create('rapots', function (Blueprint $table) {
 
-    $table->integer('matematika');
-    $table->integer('b_indonesia');
-    $table->integer('b_inggris');
-    $table->integer('produktif');
+            $table->id();
 
-    $table->timestamps();
-});
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+
+            $table->string('nama_siswa');
+            $table->string('nis');
+            $table->string('kelas');
+            $table->string('semester');
+
+            $table->integer('matematika');
+            $table->integer('b_indonesia');
+            $table->integer('b_inggris');
+            $table->integer('produktif');
+
+            $table->timestamps();
+
+        });
 
     }
 
