@@ -7,7 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class Rapot extends Model
 {
-   protected $fillable = [
+    use HasFactory;
+
+protected $fillable = [
+    'user_id',
+    'email',
     'nama_siswa',
     'nis',
     'kelas',
@@ -15,7 +19,7 @@ class Rapot extends Model
     'matematika',
     'b_indonesia',
     'b_inggris',
-    'produktif',
+    'produktif'
 ];
 
 }

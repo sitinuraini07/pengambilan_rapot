@@ -1,128 +1,57 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <title>Tambah Kelas</title>
+                        @extends('layouts.app')
 
-    <!-- Bootstrap & Icons -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+@section('title', 'Class Initialization')
 
-    <style>
-        body {
-            background: #f4f6f9;
-        }
-
-        .card {
-            border: none;
-        }
-
-        label {
-            font-weight: 600;
-            color: #495057; /* label lebih jelas */
-        }
-
-        .card-header {
-            background: linear-gradient(135deg, #2d39a7, #1cc88a); /* gradient lebih elegan */
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-
-        .form-control {
-            border-radius: 0.5rem;
-            border: 1px solid #ced4da;
-            transition: all 0.3s ease;
-        }
-
-        .form-control:focus {
-            border-color: #1cc88a;
-            box-shadow: 0 0 0 0.2rem rgba(28, 200, 138, 0.25);
-        }
-
-        .btn-success {
-            border-radius: 0.5rem;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-            transition: all 0.3s ease;
-        }
-
-        .btn-success:hover {
-            background-color: #20b16a;
-            border-color: #20b16a;
-        }
-
-        .btn-outline-secondary {
-            border-radius: 0.5rem;
-            transition: all 0.3s ease;
-        }
-
-        .btn-outline-secondary:hover {
-            background-color: #e2e6ea;
-        }
-    </style>
-</head>
-
-<body>
-
-<div class="container my-5">
-
-    <div class="card shadow-lg rounded-4">
-
-        <!-- HEADER -->
-        <div class="card-header text-white rounded-top-4">
-            <h4 class="mb-0">
-                <i class="bi bi-plus-circle-fill me-2"></i>
-                Tambah Data Kelas
-            </h4>
-        </div>
-
-        <!-- BODY -->
-        <div class="card-body p-4">
-
-            <form action="{{ route('kelas.store') }}" method="POST">
-                @csrf
-
-                <div class="mb-3">
-                    <label class="form-label">Nama Kelas</label>
-                    <input type="text" name="nama_kelas"
-                           class="form-control"
-                           placeholder="Contoh: XI RPL 1"
-                           required>
+@section('content')
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="premium-card border-0">
+            <div class="card-header bg-white border-0 pt-5 px-5">
+                <div class="d-flex align-items-center">
+                    <div class="bg-primary bg-opacity-10 text-primary rounded-4 p-3 me-4">
+                        <i class="bi bi-door-open-fill fs-2"></i>
+                    </div>
+                    <div>
+                        <h3 class="heading-premium text-dark mb-1">Initialize New Class</h3>
+                        <p class="text-muted fw-600 tiny-text mb-0">ACADEMIC STRUCTURING UNIT</p>
+                    </div>
                 </div>
+            </div>
+            <div class="card-body p-5">
+                <form action="{{ route('kelas.store') }}" method="POST">
+                    @csrf
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <label class="form-label fw-800 text-secondary tiny-text mb-2">Class Nomenclature</label>
+                            <input type="text" name="nama_kelas" class="form-control rounded-3 border-light py-3 px-4 shadow-sm" placeholder="e.g., XII RPL 1" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-800 text-secondary tiny-text mb-2">Wali Kelas (Full Name)</label>
+                            <input type="text" name="wali_kelas" class="form-control rounded-3 border-light py-3 px-4 shadow-sm" placeholder="e.g., Prof. Xavier" required>
+                        </div>
+                    </div>
 
-                <div class="mb-3">
-                    <label class="form-label">Wali Kelas</label>
-                    <input type="text" name="wali_kelas"
-                           class="form-control"
-                           placeholder="Nama wali kelas"
-                           required>
-                </div>
-
-                <div class="mb-4">
-                    <label class="form-label">Deskripsi</label>
-                    <textarea name="deskripsi"
-                              class="form-control"
-                              rows="3"
-                              placeholder="Keterangan tambahan (opsional)"></textarea>
-                </div>
-
-                <!-- BUTTON -->
-                <div class="d-flex gap-2">
-                    <button class="btn btn-success">
-                        <i class="bi bi-save"></i> Simpan
-                    </button>
-
-                    <a href="{{ route('kelas.index') }}"
-                       class="btn btn-outline-secondary">
-                        <i class="bi bi-arrow-left"></i> Kembali
-                    </a>
-                </div>
-
-            </form>
-
+                    <div class="mt-5 pt-3 d-flex gap-3">
+                        <button type="submit" class="btn btn-primary rounded-pill px-5 py-3 fw-800 shadow-lg flex-grow-1 animate-hover">
+                            Confirm Initialization
+                        </button>
+                        <a href="{{ route('kelas.index') }}" class="btn btn-light rounded-pill px-5 py-3 fw-800 text-secondary">
+                            Cancel
+                        </a>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
-
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+<style>
+    .tiny-text { font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; }
+    .fw-800 { font-weight: 800; }
+    .fw-600 { font-weight: 600; }
+    .form-control:focus {
+        border-color: var(--primary-core) !important;
+        box-shadow: 0 0 0 4px var(--primary-glow) !important;
+    }
+</style>
+@endsection
